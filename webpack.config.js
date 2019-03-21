@@ -57,6 +57,9 @@ module.exports = (env, argv) => ({
         context: 'src',
         to: 'content',
       },
+      {
+        from: 'manifest.json',
+      },
     ]),
     new ChromeExtensionReloaderPlugin({
       entries: {
