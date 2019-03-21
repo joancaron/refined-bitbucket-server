@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Refined Bitbucket server options</title>
+<link rel="stylesheet" href="options.css">
+<link rel="stylesheet" href="chrome://global/skin/in-content/common.css">
+<form id="options-form" class="detail-view-container">
+	<h2 class="only-firefox">Options</h2>
+
+	<p>
+		<label>
+			<strong>Features to disable</strong>, by filename<br>
+			<textarea name="disabledFeatures" rows="2" placeholder="For example: &#10; source-icons" spellcheck="false"></textarea>
+		</label>
+	</p>
+
+	<p>
+		<label>
+			<strong>Custom CSS</strong> (useful to undo unwanted styles)<br>
+			<textarea name="customCSS" rows="2" spellcheck="false"></textarea>
+		</label>
+	</p>
+	<p>
+		<label>
+			Bitbucket server url<br>
+			<!-- placeholder is set to enable use of :placeholder-shown CSS selector -->
+			<input type="text" name="bitbucketServer" spellcheck="false" autocomplete="off" placeholder=" "></input>
+		</label>
+	</p>
+	<p>
+		<label>
+			<strong>Bitbucket Personal token</strong>, found here (some features use the API)<br>
+			<!-- placeholder is set to enable use of :placeholder-shown CSS selector -->
+			<input type="text" name="personalToken" spellcheck="false" autocomplete="off" size="50" maxlength="50" pattern="[\w]{50}" placeholder=" "></input>
+		</label>
+	</p>
+
+	<hr>
+
+	<p>
+		<label>
+			<input type="checkbox" name="logging">
+			Show the features enabled on each page in the console
+		</label>
+	</p>
+</form>
+<script src="browser-polyfill.min.js"></script>
+<script src="options.js"></script>

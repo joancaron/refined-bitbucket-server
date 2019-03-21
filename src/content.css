@@ -1,0 +1,10 @@
+.rvb .linked-jira {
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.rvb .linked-jira li {
+  list-style: none;
+  padding: 5px 0;
+  font-style: italic;
+}
