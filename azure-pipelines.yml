@@ -33,20 +33,33 @@ steps:
 
 - script: |
     npm install
+  displayName: 'npm install'
+
+- script: |
     npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm build'
 
 - task: CopyFiles@2
   displayName: 'Copy dist to artifacts directory'
   inputs:
-    Contents: 'dist\**'
-    TargetFolder: $(Build.ArtifactStagingDirectory)
+    SourceFolder: dist
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
     CleanTargetFolder: true
     OverWrite: true
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+  displayName: 'Publish artifacts'
   condition: ne(variables['system.pullrequest.isfork'], true)
   inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'dist'
+
+- script: |
+    'npm run release:cws'
+  displayName: 'Command Line Script'
+  env:
+    CLIENT_ID: $(extension.clientId)
+    CLIENT_SECRET: $(extension.clientSecret)
+    REFRESH_TOKEN: $(extension.refreshToken)
+    EXTENSION_ID: $(extension.id)
+  condition: and(succeeded(), eq(variables['canBePacked'], true))

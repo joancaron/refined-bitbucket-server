@@ -12,8 +12,8 @@
     "commit": "git-cz",
     "build": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
-    "dry-release": "standard-version --dry-run",
-    "release": "standard-version",
+    "dry-release-version": "standard-version --dry-run",
+    "release-version": "standard-version",
     "release:amo": "cd dist && web-ext-submit",
     "release:cws": "cd dist && webstore upload --auto-publish"
   },
