@@ -1,6 +1,6 @@
 {
   "name": "Refined Bitbucket server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Browser extension that simplifies and adds useful features to bitbucket server UI",
   "homepage_url": "https://github.com/joancaron/refined-bitbucket-server",
   "manifest_version": 2,
