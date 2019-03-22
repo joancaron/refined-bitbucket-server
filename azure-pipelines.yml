@@ -41,11 +41,10 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts'
-  condition: ne(variables['system.pullrequest.isfork'], true)
+  condition: and(succeeded(), eq(variables['canBePublished'], true))
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'dist'
-  condition: and(succeeded(), eq(variables['canBePublished'], true))
 
 - script: |
     'npm run release:cws'
