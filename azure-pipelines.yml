@@ -44,4 +44,3 @@ steps:
     CleanTargetFolder: true
     OverWrite: true
     flattenFolders: false
-  condition: and(succeeded())
