@@ -4,7 +4,7 @@
   "description": "Browser extension that simplifies and adds useful features to bitbucket server UI",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "run-s type-check lint",
     "type-check": "tsc",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx}",
     "lint": "eslint . --ext ts --ext tsx --ext js --ext jsx",
