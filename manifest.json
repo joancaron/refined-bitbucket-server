@@ -4,6 +4,12 @@
   "description": "Browser extension that simplifies and adds useful features to bitbucket server UI",
   "homepage_url": "https://github.com/joancaron/refined-bitbucket-server",
   "manifest_version": 2,
+  "applications": {
+    "gecko": {
+      "id": "{e05cddcf-81b2-4f87-899c-5d87fdf17e14}",
+      "strict_min_version": "61.0"
+    }
+  },
   "permissions": [
     "storage",
     "clipboardWrite",
