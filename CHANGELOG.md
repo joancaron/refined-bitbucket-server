@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.1.0](https://github.com/joancaron/refined-bitbucket-server/compare/v1.0.3...v1.1.0) (2019-03-25)
+
+### Features
+
+- Firefox extension listing ([4df9a45](https://github.com/joancaron/refined-bitbucket-server/commit/4df9a45))
+
 ## [1.0.3](https://github.com/joancaron/refined-bitbucket-server/compare/v1.0.2...v1.0.3) (2019-03-24)
 
 ### Bug Fixes

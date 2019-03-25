@@ -1,6 +1,6 @@
 {
   "name": "refined-bitbucket-server",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Browser extension that simplifies and adds useful features to bitbucket server UI",
   "main": "index.js",
   "scripts": {
