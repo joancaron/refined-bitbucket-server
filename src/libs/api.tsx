@@ -100,7 +100,7 @@ const prLinkedIssues = async () => {
   });
   urlParams.append('fields', '*all,-comment');
   urlParams.append('minimum', '10');
-  
+
   linkedIssueDetails = await callApi(
     `${jiraIntegrationRootUrl}/issues?${urlParams.toString()}`
   );
@@ -155,7 +155,6 @@ const addVersionToTicket = async (jiraBaseUrl, linkedIssueKey, versionId) => {
       body: JSON.stringify(payload),
     }
   );
-  console.log(<p>toto</p>);
 
   return request.json();
 };
