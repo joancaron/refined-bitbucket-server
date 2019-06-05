@@ -24,3 +24,7 @@
   top: 4px;
   border-radius: 50%;
 }
+
+.pull-request-issues-trigger {
+  margin-left: 5px;
+}

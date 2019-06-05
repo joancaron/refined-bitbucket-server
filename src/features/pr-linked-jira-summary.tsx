@@ -31,7 +31,7 @@ async function init() {
         >
           {linkedIssue.key}
         </a>
-        <span>{linkedIssue.fields.summary}</span>
+        <span>: {linkedIssue.fields.summary}</span>
       </li>
     );
   });
