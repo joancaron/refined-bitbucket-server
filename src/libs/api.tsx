@@ -7,6 +7,7 @@ import { banner } from './notification';
 interface AtlassianApiResponse {
   data?: JsonObject;
   errors?: JsonObject[];
+  errorMessages?: JsonObject[];
 }
 
 export class AtlassianAPIError extends Error {
@@ -30,30 +31,43 @@ const jiraIntegrationRootUrl = `${
   location.origin
 }/rest/jira-integration/latest`;
 
-async function getError(errors: JsonObject[]): Promise<AtlassianAPIError> {
+async function getError(
+  apiResponse: AtlassianApiResponse
+): Promise<AtlassianAPIError> {
   let messageContainer = <div className="rbs-errors" />;
-  errors.map(error => {
-    let errorMessage = <p>{error.message} </p>;
+  const { errors = [], errorMessages = [] } = apiResponse;
+  if (errors.length) {
+    errors.map(error => {
+      let errorMessage = <p>{error.message} </p>;
 
-    if (
-      error.exceptionName ===
-      'com.atlassian.integration.jira.JiraAuthenticationRequiredException'
-    ) {
-      errorMessage.appendChild(
-        <a title={error.message} href={error.authenticationUri} target="blank">
-          {error.authenticationUri}
-        </a>
-      );
-    }
+      if (
+        error.exceptionName ===
+        'com.atlassian.integration.jira.JiraAuthenticationRequiredException'
+      ) {
+        errorMessage.appendChild(
+          <a
+            title={error.message}
+            href={error.authenticationUri}
+            target="blank"
+          >
+            {error.authenticationUri}
+          </a>
+        );
+      }
 
-    messageContainer.appendChild(errorMessage);
-  });
+      messageContainer.appendChild(errorMessage);
+    });
+  } else if (errorMessages.length) {
+    errorMessages.map(errorMessage => {
+      messageContainer.appendChild(<p>{errorMessage}</p>);
+    });
+  }
 
   banner(messageContainer);
 
   return new AtlassianAPIError(
     'Unable to fetch.',
-    JSON.stringify(errors, null, '\t')
+    JSON.stringify(apiResponse, null, '\t')
   );
 }
 
@@ -70,10 +84,10 @@ export const callApi = mem(
 
     const apiResponse: AtlassianApiResponse = await response.json();
 
-    const { errors = [] } = apiResponse;
+    const { errors = [], errorMessages = [] } = apiResponse;
 
-    if (!response.ok || errors.length > 0) {
-      throw getError(errors);
+    if (!response.ok || errorMessages.length || errors.length) {
+      throw getError(apiResponse);
     }
 
     if (response.ok) {
@@ -111,13 +125,11 @@ const prLinkedIssues = async () => {
 const getProjectVersions = async jiraBaseUrl => {
   const pageContext = features.pageContext();
 
-  const versionsRequest = await fetch(
+  return await callApi(
     `${jiraBaseUrl}/rest/api/2/project/${
       pageContext.projectKey
     }/version?orderBy=-sequence`
   );
-
-  return versionsRequest.json();
 };
 
 const getPullRequest = async () => {
