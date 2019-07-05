@@ -9,9 +9,7 @@ async function init() {
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href={`${location.origin}/projects/${pageContext.projectKey}/repos/${
-          pageContext.repoSlug
-        }/browse?at=${branch.textContent}`}
+        href={`${location.origin}/projects/${pageContext.projectKey}/repos/${pageContext.repoSlug}/browse?at=${branch.textContent}`}
       >
         {branch.textContent}
       </a>
