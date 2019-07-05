@@ -26,9 +26,7 @@ const apiDefaults: ApiOptions = {
 };
 
 const bitbucketRootUrl = `${location.origin}/rest/jira/latest/projects`;
-const jiraIntegrationRootUrl = `${
-  location.origin
-}/rest/jira-integration/latest`;
+const jiraIntegrationRootUrl = `${location.origin}/rest/jira-integration/latest`;
 
 async function getError(errors: JsonObject[]): Promise<AtlassianAPIError> {
   let messageContainer = <div className="rbs-errors" />;
@@ -66,6 +64,10 @@ export const callApi = mem(
     const response = await fetch(query, {
       method,
       body: body && JSON.stringify(body),
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
     });
 
     const apiResponse: AtlassianApiResponse = await response.json();
@@ -88,9 +90,7 @@ export const prLinkedIssues = async () => {
   const pageContext = features.pageContext();
 
   const linkedIssues = await callApi(
-    `${bitbucketRootUrl}/${pageContext.projectKey}/repos/${
-      pageContext.repoSlug
-    }/pull-requests/${pageContext.pullRequestId}/issues`
+    `${bitbucketRootUrl}/${pageContext.projectKey}/repos/${pageContext.repoSlug}/pull-requests/${pageContext.pullRequestId}/issues`
   );
 
   const urlParams = new URLSearchParams();
@@ -106,4 +106,18 @@ export const prLinkedIssues = async () => {
   );
 
   return linkedIssueDetails;
+};
+
+export const executeIssueTransitions = async (
+  applicationId,
+  issueKey,
+  transitionId
+) => {
+  return await callApi(
+    `${jiraIntegrationRootUrl}/issues/${issueKey}/transitions?applicationId=${applicationId}&fields=*all,-comment`,
+    {
+      method: 'POST',
+      body: { transition: { id: transitionId } },
+    }
+  );
 };
