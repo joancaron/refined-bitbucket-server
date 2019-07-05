@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.3.0](https://github.com/joancaron/refined-bitbucket-server/compare/v1.2.0...v1.3.0) (2019-07-05)
+
+### Bug Fixes
+
+- Improve linked jira display ([#16](https://github.com/joancaron/refined-bitbucket-server/issues/16)) ([5fbf063](https://github.com/joancaron/refined-bitbucket-server/commit/5fbf063))
+
+### Features
+
+- add jira transitions ([#21](https://github.com/joancaron/refined-bitbucket-server/issues/21)) ([86c888c](https://github.com/joancaron/refined-bitbucket-server/commit/86c888c))
+
 # [1.2.0](https://github.com/joancaron/refined-bitbucket-server/compare/v1.1.0...v1.2.0) (2019-04-09)
 
 ### Features
