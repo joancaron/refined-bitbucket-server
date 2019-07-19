@@ -68,6 +68,7 @@
     "dom-chef": "^3.5.2",
     "dom-loaded": "^1.0.1",
     "element-ready": "^3.0.0",
+    "interactjs": "^1.4.0-rc.13",
     "mem": "^5.0.0",
     "select-dom": "^4.2.1",
     "storm-textarea": "^2.0.1",
