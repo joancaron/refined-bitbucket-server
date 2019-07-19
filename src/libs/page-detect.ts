@@ -13,6 +13,9 @@ export const is404 = (): boolean => select.exists('.error-image _404');
 
 export const is500 = (): boolean => select.exists('.error-image _500');
 
+export const isProject = (): boolean =>
+  /^.*projects\/.*/.test(getCleanPathname() as string);
+
 export const isPRDetails = (): boolean =>
   /^.*pull-requests\/\d*\/.*/.test(getCleanPathname() as string);
 
