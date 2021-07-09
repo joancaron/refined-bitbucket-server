@@ -53,7 +53,7 @@ async function issueTransition(
 }
 
 async function init() {
-  const selector = '.aui-group.details';
+  const selector = '.pull-request-details';
 
   await waitForAjaxElement(selector);
 
