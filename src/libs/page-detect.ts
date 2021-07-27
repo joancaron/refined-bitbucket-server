@@ -4,8 +4,6 @@ import select from 'select-dom';
 interface PageContext {
   repoSlug: string;
   projectKey: string;
-  repoName: string;
-  projectName: string;
   pullRequestId?: string;
 }
 
@@ -29,12 +27,12 @@ export const isSource = (): boolean =>
   /^.*browse/.test(getCleanPathname() as string);
 
 export const pageContext = (): PageContext => {
-  const context = select('#content');
+  const context = location.pathname.match(
+    /\/projects\/([^/]*)\/repos\/([^/]*)\/pull-requests\/([^/]*)/
+  );
   return {
-    repoSlug: context.dataset.reposlug,
-    projectKey: context.dataset.projectkey,
-    repoName: context.dataset.reponame,
-    projectName: context.dataset.projectname,
-    pullRequestId: context.dataset.pullrequestid,
+    repoSlug: context[2],
+    projectKey: context[1],
+    pullRequestId: context[3],
   };
 };

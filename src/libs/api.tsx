@@ -25,7 +25,7 @@ const apiDefaults: ApiOptions = {
   body: undefined,
 };
 
-const bitbucketRootUrl = `${location.origin}/rest/jira/latest/projects`;
+const bitbucketRootUrl = `${location.origin}/rest/api/latest`;
 const jiraIntegrationRootUrl = `${location.origin}/rest/jira-integration/latest`;
 
 async function getError(errors: JsonObject[]): Promise<AtlassianAPIError> {
@@ -53,6 +53,39 @@ async function getError(errors: JsonObject[]): Promise<AtlassianAPIError> {
     'Unable to fetch.',
     JSON.stringify(errors, null, '\t')
   );
+}
+
+export async function api<T>(
+  query: string,
+  options: ApiOptions = apiDefaults,
+  wrapped: boolean
+): Promise<T> {
+  const { method, body } = { ...apiDefaults, ...options };
+  const response = await fetch(query, {
+    method,
+    body: body && JSON.stringify(body),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const { errors = [] } = await (response.json() as Promise<
+      AtlassianApiResponse
+    >);
+    if (errors.length > 0) {
+      throw getError(errors);
+    }
+    throw new Error(response.statusText);
+  }
+
+  if (wrapped) {
+    const apiResponse = await (response.json() as Promise<{ values: T }>);
+    return apiResponse.values;
+  }
+
+  return await (response.json() as Promise<T>);
 }
 
 export const callApi = mem(
@@ -84,28 +117,65 @@ export const callApi = mem(
   }
 );
 
-export const prLinkedIssues = async () => {
-  let linkedIssueDetails;
-
-  const pageContext = features.pageContext();
-
-  const linkedIssues = await callApi(
-    `${bitbucketRootUrl}/${pageContext.projectKey}/repos/${pageContext.repoSlug}/pull-requests/${pageContext.pullRequestId}/issues`
+function chunk(arr: string[], size: number) {
+  return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+    arr.slice(i * size, i * size + size)
   );
+}
 
+async function retrieveIssues(linkedIssues: string[]) {
   const urlParams = new URLSearchParams();
-
   linkedIssues.forEach(linkedIssue => {
-    urlParams.append('issueKey', linkedIssue.key);
+    urlParams.append('issueKey', linkedIssue);
   });
-  urlParams.append('fields', '*all,-comment');
+
+  urlParams.append('fields', 'summary,issuetype,parent,status');
   urlParams.append('minimum', '10');
 
-  linkedIssueDetails = await callApi(
-    `${jiraIntegrationRootUrl}/issues?${urlParams.toString()}`
+  return await api<Issue[]>(
+    `${jiraIntegrationRootUrl}/issues?${urlParams.toString()}`,
+    apiDefaults,
+    false
+  );
+}
+
+export const prLinkedIssues = async () => {
+  const pageContext = features.pageContext();
+
+  const linkedIssues = await api<Issue[]>(
+    `${bitbucketRootUrl}/projects/${pageContext.projectKey}/repos/${pageContext.repoSlug}/pull-requests/${pageContext.pullRequestId}/commits?limit=1000`,
+    apiDefaults,
+    true
   );
 
-  return linkedIssueDetails;
+  type AssociativeArray<T = unknown> = { [key: string]: T | undefined } | T[];
+  let mainIssues: AssociativeArray<Issue> = {};
+  const issues = await chunk(
+    linkedIssues
+      .map(function(p) {
+        if (p.properties) {
+          return p.properties['jira-key'];
+        }
+        return [];
+      })
+      .reduce((a, b) => a.concat(b), []),
+    20
+  )
+    .map(async linkedIssues => await retrieveIssues(linkedIssues))
+    .reduce(
+      async (a, b) => (await a).concat(await b),
+      Promise.resolve(new Array<Issue>())
+    );
+
+  issues.forEach(issue => {
+    if (issue.fields.parent) {
+      mainIssues[issue.fields.parent.key] = issue.fields.parent;
+    } else {
+      mainIssues[issue.key] = issue;
+    }
+  });
+
+  return Object.values(mainIssues);
 };
 
 export const executeIssueTransitions = async (
