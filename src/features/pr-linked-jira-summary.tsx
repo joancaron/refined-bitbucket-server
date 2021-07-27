@@ -5,7 +5,7 @@ import { waitForAjaxElement } from '../libs/dom-utils';
 import select from 'select-dom';
 import delegate, { DelegateEvent } from 'delegate-it';
 
-function getTransitionsMarkup(transitions) {
+function getTransitionsMarkup(transitions: Transition[]) {
   const transitionList = transitions.map(transition => {
     return (
       <li key={transition.id}>

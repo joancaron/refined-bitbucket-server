@@ -13,6 +13,10 @@
   vertical-align: middle;
 }
 
+.rvb .linked-jira .aui-icon {
+  margin-right: 5px;
+}
+
 /* PR - File explorer - Display a red dot when there is a comment on a file */
 .pull-request-content .file-tree li {
   position: relative;
